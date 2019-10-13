@@ -2,32 +2,66 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class test3 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String path = checkFile();
-        int lines = numberLines();
+        String path2 = newPath(path);
+        new File(path2);
         ArrayList<String> list = new ArrayList<>();
-        int indexList = 0;
-        char newLine = '\n';
+        final char newLine = '\n';
         try (FileReader reader = new FileReader(path)) {
             int c;
-            String s = null;
+            String s = "";
             while ((c = reader.read()) != -1) {
                 if ( newLine != (char) c) {
                     s = s + (char) c;
                 } else {
                     list.add(s);
-                    s = null;
+                    s = "";
                 }
-
             }
         } catch(IOException ex) {
-            System.out.println("Troubles with writing of the file: " + ex.getMessage());
+            System.out.println("Troubles with reading of the file: " + ex.getMessage());
         }
-        for (String s : list)
-        System.out.println(s);
+
+
+        int lines = numberLines(list.size());
+        int listSize = list.size();
+
+        ArrayList<Integer> randomIndex = new ArrayList<>();
+        for (int i = 0; i < listSize; i++) {
+            randomIndex.add(i);
+        }
+
+
+        int shuffle = randomIndex.size() - 1;
+        for (int i = 0; i < shuffle; i++) {
+            int r = getRandomNumberInRange(shuffle);
+            int buff = randomIndex.get(r);
+            randomIndex.remove(r);
+            randomIndex.add(buff);
+        }
+
+
+
+        try (FileWriter file1 = new FileWriter(path);
+             FileWriter file2 = new FileWriter(path2)) {
+            file1.write(list.get(0) + newLine);
+            file2.write(list.get(0) + newLine);
+            list.remove(0);
+            for (int i = 0; i < lines; i++){
+                int j = randomIndex.get(i);
+                file1.write(list.get(j) + newLine);
+                list.set(j, "removed");
+            }
+
+            for (String s : list) {
+                if (s.equals("removed")) {}
+                    else{
+                    file2.write(s + newLine);
+                }
+            }
+        }
     }
-
-
 
 
 
@@ -49,7 +83,7 @@ public class test3 {
         String path = getInputData();
         int attemptNumber = 5;
         if (path.equals(null) || path.equals("")) {
-            path = "C://Users//i.meleshko//1//1.txt";
+            path = "C://Users//Asus//IdeaProjects//1//1.txt";
 
         } else {
             File file = new File(path);
@@ -67,14 +101,49 @@ public class test3 {
         return path;
     }
 
-    public static int numberLines(){
-        System.out.println("Enter number of lines, or press Enter and default number of lines will be 10:");
+    public static int numberLines(int numberStrings) {
+        System.out.println("Enter number of lines, which is less or equals to number of strings in the file - " + numberStrings);
+        System.out.println("or press Enter and default number of lines will be 10:");
         String input = getInputData();
-        int lines;
-        if (input == null)
-            lines = 10;
-        else
+        int lines = 0;
+        int defaultNumber = 10;
+        if (input.equals(null) || input.equals(""))
+            lines = defaultNumber;
+        else {
+            if (isStringInt(input)) {
             lines = Integer.parseInt(input);
+                if (lines > numberStrings)
+                {
+                    System.out.println(lines + " is more than maximum number of strings: " + numberStrings + " Number of lines was set to default: " + defaultNumber);
+                    lines = defaultNumber;
+                }
+            }
+            else {
+                System.out.println("Not a number");
+                System.exit(1);
+            }
+        }
         return lines;
+    }
+
+    public static boolean isStringInt(String s)
+    {
+        try
+        {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException ex)
+        {
+            return false;
+        }
+    }
+
+    public static String newPath(String s) {
+        s = s.replaceAll(".txt", "_res.txt");
+        return s;
+    }
+
+    private static int getRandomNumberInRange(int max) {
+        return (int)(Math.random() * max);
     }
 }
