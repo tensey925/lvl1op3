@@ -28,7 +28,7 @@ public class test3 {
         int listSize = list.size();
 
         ArrayList<Integer> randomIndex = new ArrayList<>();
-        for (int i = 0; i < listSize; i++) {
+        for (int i = 0; i < listSize - 1; i++) {
             randomIndex.add(i);
         }
 
@@ -40,7 +40,6 @@ public class test3 {
             randomIndex.remove(r);
             randomIndex.add(buff);
         }
-
 
 
         try (FileWriter file1 = new FileWriter(path);
@@ -83,7 +82,7 @@ public class test3 {
         String path = getInputData();
         int attemptNumber = 5;
         if (path.equals(null) || path.equals("")) {
-            path = "C://Users//Asus//IdeaProjects//1//1.txt";
+            path = "D://1.txt";
 
         } else {
             File file = new File(path);
