@@ -13,6 +13,7 @@ public class test3 {
         new File(path2);
         ArrayList<String> list = new ArrayList<>();
         final char newLine = '\n';
+        final char finalLine = '\r';
         try (FileReader reader = new FileReader(path)) {
             int c;
             String s = "";
@@ -24,7 +25,7 @@ public class test3 {
                     s = "";
                 }
             }
-            list.add(s);
+            list.add(s + finalLine);
         } catch(IOException ex) {
             System.out.println("Troubles with reading of the file: " + ex.getMessage());
         }
